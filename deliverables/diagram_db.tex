@@ -1,0 +1,50 @@
+\begin{tikzpicture}
+
+  \node[class] (USER) {
+    \newtable{\type{USER}}{}
+  };
+
+  \node[class] (PLAYER) [right of=USER, node distance = 5cm] {
+    \newtable{\type{PLAYER}}{}
+  };
+
+  \node[class] (POKCAPT) [right of=PLAYER, node distance = 8cm] {
+    \newtable{\type{POKEMONCAPTURED}}{}
+  };
+
+  \node[class] (POKEMON) [right of=POKCAPT, node distance = 8cm] {
+    \newtable{\type{POKEMON}}{}
+  };
+
+  \node[class] (GENPOKEMON) [above of=POKEMON, node distance = 4cm] {
+    \newtable{\type{GENERATEDPOKEMON}}{}
+  };
+
+  \node[class] (BAG) [above of=PLAYER, node distance = 4cm] {
+    \newtable{\type{BAG}}{}
+  };
+
+  \node[class] (ITEM) [above of=BAG, node distance = 4cm] {
+    \newtable{\type{ITEM}}{}
+  };
+
+  \node[class] (POISTATE) [above of=PLAYER, node distance = 4cm, xshift=8cm] {
+    \newtable{\type{POINTOFINTERESTSTATE}}{}
+  };
+
+  \node[class] (POI) [above of=POISTATE, node distance = 4cm] {
+    \newtable{\type{POINTOFINTEREST}}{}
+  };
+
+  \path
+  (USER)   edge [<->, line width=1.5pt, above] node {1,1 - 0,n} (PLAYER)
+  (PLAYER) edge [<->, line width=1.5pt, above] node {1,1 - 0,n} (POKCAPT)
+  (POKCAPT) edge [<->, line width=1.5pt, above] node {0,n - 1,1} (POKEMON)
+  (POKEMON) edge [<->, line width=1.5pt, sloped, anchor=center, above] node {1,1 - 0,n} (GENPOKEMON)
+  (PLAYER) edge [<->, line width=1.5pt, sloped, anchor=center, above] node {1,1 - 0,n} (BAG)
+  (BAG) edge [<->, line width=1.5pt, sloped, anchor=center, above] node {0,n - 1,1} (ITEM)
+  (PLAYER) edge [<->, line width=1.5pt, sloped, anchor=center, above] node {1,1 - 0,n} (POISTATE)
+  (POISTATE) edge [<->, line width=1.5pt, sloped, anchor=center, above] node {0,n - 1,1} (POI)
+  ;
+
+\end{tikzpicture}

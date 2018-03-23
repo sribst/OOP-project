@@ -1,0 +1,191 @@
+% Preamble
+%
+\documentclass[a4paper,09pt]{article}
+
+\usepackage[familydefault,light]{Chivo}
+\usepackage{stmaryrd}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage[pdftex]{graphicx}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=magenta}
+
+% Commands
+%
+%% So we can highlight things (YBG is for Yellow BackGround, if you want to
+%% create new ones - power to the colours ! - follow the convention ;)
+
+\newcommand{\YBG}[1]{\colorbox[rgb]{1,1,0.3}{#1}}
+
+% Document
+%
+
+\setlength{\parindent}{0cm}
+\author{Elie Canonici Merle, Colin González, Sylvain Ribstein, \\
+  Kevin Sanchis, Anas Aarab, Paul Laforgue}
+
+\title{Software Requirements Specification}
+
+\date{October 17, 2016 \\ \small Last updated : \today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  This file provides an overview of the requirements for the project of the
+  course POCA 2016.
+\end{abstract}
+
+\section*{Introduction}
+
+\paragraph{Purpose}
+
+The goal of the project is to develop a framework in SCALA to implement games
+such as pokemon-go (i.e a MMORPG plus augmented reality).
+The project is open source.
+
+\paragraph{Definitions}
+Augmented reality : the concept here is still vague, the main importance is
+to make use, eventually, of a real life map, i.e. \textit{à la} Google Maps, in
+which a player is able to move through the World.\\
+MMORPG : Massively Multiplayer Online Role-Playing Game.
+We expect the software to manage several (to be determined later) users at a time.
+
+\paragraph{System overview}
+In this document we detail the specification of the underlying engine and the
+client of the software. The engine represents an abstraction of the game, the
+gameplay and its features. On top of the engine a more precise implementation
+is to be added. The implementation provides the setup, as well as a gameplay
+and the features expected by the player. The engine itself is a server
+application able to manage the clients (players) connected on it. The server is
+expected to resolve concurrency issues to ensure safety and liveness in order to
+prevent lost updates as well as insuring coherence between players.
+For instance, the server is responsible of the information given to the player.
+More precisely, if a token (i.e. a Pokémon) is spawned in a location $l$,
+then all the clients (players) near enough to the position $l$ must be able to
+interact with the tokens. On the other side the client is the part of the
+sofware that allows a user to interact with the server application. The client
+provides a user interface and simple documentation used as an accessible goto
+reference for any kind of user. The developpement of such software, both client
+and software, is supposed to be scalable. Therefore an object oriented and
+modular paradigm is needed.
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+The software presented in this document is a MMORPG game. The game will use
+virtual reality features to provide a realistic experience of gameplay for its
+users. This videogame is mainly inspired by the Pokémon Go mobile game.
+In Pokémon Go a player goes on the hunt after Pokémons everywhere, possibly
+all over the World. The player uses Pokeballs in order to capture such creatures.
+The goals are to capture all existing kind of Pokémons and conquer and hold
+particular spots in the real world. Pokémons are trainable creatures, they are
+put to fight by their trainers in such way that the player earns experience from
+won battles. Players are part of a team so that players from the same team
+can help each other during fights. The software is expected to have
+similar features.
+
+\subsection{Design Constraints}
+The software must absolutely respect the specifications on figure \ref{descons}.
+\begin{figure}[!h]
+  \begin{center}
+    \begin{enumerate}
+    \item The game is about augmented reality Pokémon-like characters
+      with statistics about their level, health points and other statistics.
+    \item A map like model allowing geolicalisation. In the first version
+      a simple model is acceptable. However it is desirable to add Google
+      Maps like World Map.
+    \item The game makes use of augmented reality or real life objects
+      (i.e. Pokéballs, Pokéstops, points of interest, Pokémon centers and
+      the like).
+    \item Interaction between several players.
+    \item A modular architecture in order to provide extra features
+      using extensions.
+    \item The software must be implemented using the Scala language.
+    \item The software must respect a distributed architecture using a
+      server-client architecture.
+    \item A protocol for the server-client must be defined and used mandatorily.
+      No off protocol communications should be accepted.
+    \item The synchronization of the client is achieved through the server part.
+    \item The engine must not need high resources (CPU and memory) so that it
+      is playable in a variety of devices.
+    \item The software is easy to use by any sort of player.
+    \item Optmizations are desireable. As an example, characters should not
+      be spawned in useless places. Particularly, a place in the world with
+      no players near enough.
+    \item The client software doens't store the user data, the client
+      retrieves it when the user signs in.
+    \end{enumerate}
+    \caption{Design Constraints}
+    \label{descons}
+  \end{center}
+\end{figure}
+\subsection{Product Functions}
+The software must ensure the functions on figure \ref{prodfuns}.
+\begin{figure}[H]
+  \begin{center}
+    \begin{enumerate}
+    \item The software provides a means to interact with virtual characters.
+    \item The software functions in real-time.
+    \item The software is secure.
+    \item New players can register to game.
+    \item The software  manages the conection of clients to the server.
+    \item The software ensures a dynamic gameplay.
+    \item The game difficulty is low and mostly based and random events
+      and progression by regular sessions of gameplay.
+    \item The software may offer interaction with other between players.
+    \end{enumerate}
+    \caption{Product Functions}
+    \label{prodfuns}
+  \end{center}
+\end{figure}
+
+\subsection{User characteristics}
+
+The user has to be connected to the server (and by extension to internet) in
+order to play the game. There is no offline version. Since this MMORPG is based
+on augmented reality, the user needs to use a device allowing him to be located
+and to move freely, for example a smartphone.
+
+\section{Specific requirements}
+
+\subsection{Performance requirements}
+
+The application has to be constantly connected with the user and remember its
+current information.
+In that sense, if the client-side crashes, the application should be able
+to restore its previous state.
+The player should have the possibility to look for its progression and
+so access databases at anytime.
+
+\subsection{Logical database requirement}
+
+The database should distinguish between static (age of the user,..)
+and dynamic informations (its current location,..).\\
+Briefly, the database will need to store numerous informations about the:
+
+\begin{itemize}
+\item
+  \textbf{Users}: name, age, contacts, friends,
+  inventory, current and last locations...
+\item
+  \textbf{Pokemons}: name, race, characteristics, color...
+\item
+  \textbf{Items}: name, price...
+\end{itemize}
+
+An adequate object-relational database choice would be: PostgreSQL.
+It's open source and has a good reputation.
+The relational model has to be scalable, and should be able to
+support a lot of players. Also, it should be easily extended.
+
+\end{document}

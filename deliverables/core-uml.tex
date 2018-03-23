@@ -1,0 +1,349 @@
+\begin{sidewaysfigure}
+  \begin{tikzpicture}
+    % \node[class] (InputMsg){
+    % \newclass{Object InputMsg} {
+    % \attribut{case class Login}(\type{string},\type{string});
+    % \attribut{case class Signup}(\type{string},\type{string});
+    % ...} {}};
+
+    % \node[class] (OutputMsg){
+    % \newclass{Object OutputMsg} {
+    % \attribut{case class InfoText}(\type{string});
+    % \attribut{case class Pokemons}(\type{Seq[Pokemon]});
+    % ...} {}};
+
+    \node[class] (TerminalOutput) {
+      \newclass{Class TerminalOutput}{}
+      {}
+    };
+
+    \node[class] (OutputManager) [above of=TerminalOutput, node distance=2.5cm] {
+      \newclass{Class OutputManager} {}
+      {
+        % \method{display}(\type{String}) : \type{Future[Unit]};
+        % \method{displays}(\type{Seq[String]}) : \type{Future[Seq[Unit]]};
+        % \method{output}(\type{Msg}):\type{Reiceve};
+      }
+    };
+
+    \node[class] (Actor) [above of=OutputManager, node distance=2.5cm] {
+      \newclass{Class Actor} {}
+      {}
+    };
+
+    \node[class] (ClientActor) [right of=Actor, node distance=5.5cm] {
+      \newclass{Class ClientActor} {}
+      {}
+    };
+
+    \node[class] (NetClient) [right of=ClientActor, node distance=5.5cm] {
+      \newclass{class NetClient} {}
+      {
+        % \method{apply}:\type{NetClient}
+      }
+    };
+
+    \node[class] (Supervisor) [above of=ClientActor, node distance=2.5cm] {
+      \newclass{class Supervisor} {
+        % \attribut{val output} : \type{Actor}
+      }
+      {
+        % \method{whenloggedout} : \type{Receive};
+        % \method{whenloggedin} : \type{Receive}
+      }
+    };
+
+    \node[class] (Client) [right of=NetClient, node distance=5.5cm] {
+      \newclass{object Client} {
+        % val net : \type{NetClient};
+        % type type{I}<:\type{InputEngine};
+        % val system : \type{Actor};
+        % val supervisor : \type{Actor};
+        % val inputEngine : \type{I};
+      }
+      {
+        % \method{run}:\type{unit}
+      }
+    };
+
+    \node[class] (InputEngine) [below of=Client, node distance=2.5cm] {
+      \newclass{abstract class InputEngine} {}
+      {
+        % \method{run}:\type{Future[Any]}
+      }
+    };
+
+    \node[class] (TerminalInputEngine) [below of=InputEngine, node distance=2.5cm] {
+      \newclass{class TerminalInputEngine} {}
+      {
+        % \method{run}:\type{Future[unit]};
+        % \method{read}:\type{unit}
+      }
+    };
+
+    \path
+    (OutputManager) edge [->,line width=1.5pt] node {} (TerminalOutput)
+    (Actor) edge [->,line width=1.5pt] node {} (OutputManager)
+    (Actor) edge [->,line width=1.5pt] node {} (Supervisor)
+    (Actor) edge [->,line width=1.5pt] node {} (ClientActor)
+    (InputEngine) edge [->,line width=1.5pt] node {} (TerminalInputEngine)
+
+    (Supervisor) edge [-open diamond, line width=1.5pt] node {} (Client)
+    (NetClient) edge [-open diamond, line width=1.5pt] node {} (Client)
+    (ClientActor) edge [-open diamond, line width=1.5pt] node {} (NetClient)
+    (InputEngine) edge [-open diamond, line width=1.5pt] node {} (Client)
+    ;  
+
+  \end{tikzpicture}
+  \caption{UML of the Client}
+  \label{clientuml}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+  \begin{tikzpicture}
+
+    \node[class] (ServerActor) {
+      \newclass{Class ServerActor} {}
+      {}
+    };
+
+    \node[class] (Actor) [below of=ServerActor, node distance=2.5cm] {
+      \newclass{Class Actor} {}
+      {}
+    };
+
+    \node[class] (CH) [right of=Actor, node distance=5.5cm] {
+      \newclass{Class ConnectionHandler} {}
+      {}
+    };
+
+    \node[class] (DefaultActor) [right of = CH, node distance=7.5cm] {
+      \newclass{Class DefaultActor} {}
+      {}
+    };
+
+    \node[class] (TokenMaker) [below of= CH, node distance=2.5cm] {
+      \newclass{Class TokenMaker} {}
+      {}
+    };
+
+    \node[class] (TokenManager) [below of= TokenMaker, node distance=2.5cm] {
+      \newclass{Class TokenManager} {}
+      {}
+    };
+
+    \path
+    (Actor) edge [->,line width=1.5pt] node {} (ServerActor)
+    (Actor) edge [->,line width=1.5pt] node {} (CH)
+    (Actor) edge [->,line width=1.5pt] node {} (TokenMaker.north west)
+    (Actor) edge [->,line width=1.5pt] node {} (TokenManager.north west)
+
+    (TokenMaker) edge [-open diamond, line width=1.5pt] node {}
+    (DefaultActor.south west)
+    (TokenManager) edge [-open diamond, line width=1.5pt] node {} (TokenMaker)
+    (DefaultActor) edge [-open diamond, line width=1.5pt] node {} (CH)
+    (CH) edge [-open diamond, line width=1.5pt] node {}
+    (ServerActor.south east) 
+    ;  
+    
+  \end{tikzpicture}
+  \caption{UML of the Server}
+  \label{serveruml}
+\end{sidewaysfigure}
+\begin{sidewaysfigure}
+  \begin{tikzpicture}
+
+    \node[class] (Slick)  {
+      \newclass{Class Slick} {}
+      {}
+    };
+
+    \node[class] (DB) [below of=Slick , node distance=2.5cm] {
+      \newclass{Class DB} {}
+      {}
+    };
+
+    \node[class] (Token) [right of=Slick , node distance=5.5cm] {
+      \newclass{Class Token} {}
+      {}
+    };
+
+    \node[class] (Pokemon) [below of=Token , node distance=2.5cm] {
+      \newclass{Class Pokemon} {}
+      {}
+    };
+
+    \node[class] (Utils) [right of=Token , node distance=5.5cm] {
+      \newclass{Class Utils} {}
+      {}
+    };
+
+    \path 
+    (Token) edge [->,line width=1.5pt] node {} (Pokemon)
+    (Slick) edge [->,line width=1.5pt] node {} (DB)
+
+    ;
+  \end{tikzpicture}
+  \caption{Other Class}
+  \label{otheruml}
+\end{sidewaysfigure}
+
+
+
+% \begin{tikzpicture}
+   
+%   \node[class] (BUS) {
+%     \newclass{Class BUS}
+%     {
+%     }{
+%       \method{this}(UID: \type{int},pass:\type{string}):\type{Boolean};
+%       \method{Send}(req:\type{request}):\type{Boolean} ;
+%       \method{Receive}():\type{Result} ;
+%       \method{Disconnect}(): \type{Boolean}
+%     }
+%   };
+  
+%   \node[class] (TCP) [below of=BUS, node distance=2.5cm,xshift=1cm] {
+%     \newclass{Bus}
+%     {}{}
+%   };
+  
+%   \node[class] (HTCP) [below of=TCP, node distance=1cm] {
+%     \newclass{HostBus}
+%     {}{}
+%   };
+
+%   \node[class] (HBUS) [below of = BUS, node distance = 7cm]{
+%     \newclass{Class HostBUS}
+%     {
+%       \attribut{Port}:\type{Int};      
+%     }
+%     {
+%       \method{this}():();
+%       \method{Accept}(UID:\type{Int},pass:\type{String}):();
+%       \method{send}(req:\type{request}):\type{Boolean} ;
+%       \method{Receive}():\type{Result} ;
+%       \method{Disconnect}():();
+%     }
+%   };
+
+%   \node[class] (OBJ) [right of=BUS, node distance=7cm] {
+%     \newclass{Abstract Server}
+%     {
+%       \attribut{UID}:\type{Int};
+%       \attribut{Address}:\type{IP};
+%       \attribut{Port}:\type{Int};
+%       \attribut{Timeout}:\type{Int};
+%       \attribut{Maxconnection}:\type{Int}
+%     }{
+%     }
+%   };
+
+%   \node[class] (SRV) [right of=OBJ, node distance = 8cm] {
+%     \newclass{Engine}
+%     {
+%       \attribut{CltBus}: \type{HostBUS};
+%       \attribut{SrvDBBus}: \type{BUS}
+%     }{
+%       \method{setToken}(tok:\type{Token}):\type{Boolean};
+%       \method{getToken}(req:\type{Request})\type{Token}
+%     }
+%   };
+  
+%   \node[class] (SDB) [below of=SRV, node distance=5cm] {
+%     \newclass{DB Server}{
+%       \attribut{DB\_IP}:\type{IP};
+%       \attribut{DB\_port}:\type{Int};
+%       \attribut{DB\_connect}:\type{Socket};
+%       \attribut{Bus}:\type{HostBUS};
+%     }{
+%       \method{connectDB}():\type{Boolean};
+%       \method{requestDB}(q:\type{Query}):\type{Result}
+%     }
+%   };
+
+%   \node[class] (CLT) [below of=SDB, node distance =6cm] {
+%     \newclass{Client}
+%     {
+%       \attribut{UserID}:\type{Int};
+%       \attribut{Poke}: \type{Token\ Collection};
+%       \attribut{POI} : \type{Token\ Collection};
+%       \attribut{PokeArea}: \type{Token\ Collection};
+%       \attribut{POIArea}: \type{Token\ Collection};
+%       \attribut{SrvDBBus}: \type{BUS};
+%       \attribut{SrvBus}: \type{BUS};
+%       \attribut{CltBus}: \type{HostBUS\ option}
+%     }{
+%       \method{connect}(user:\type{String},pass:\type{String}):(UserID:\type{Int});
+%       \method{getToken}(req:\type{Request}):\type{Token};
+%       \method{setToken}(tok:\type{Token}):\type{Boolean};
+%       \method{getAllToken}(req:\type{Request}):\type{Token\ Collection};
+%       \method{areaToken}(coord:\type{GPS},req:\type{Request}):\type{Token\ Collection}
+%     }
+%   };
+
+%   % \node[class] (SRVI) [right of=SDB, node distance =8cm] {
+%   %   \newclass{Trait Serverizable}
+%   %   {
+%   %     \attribut{Timeout}:\type{Int};
+%   %     \attribut{Maxconnection}:\type{Int};
+%   %   }{
+%   %     \method{CreateBus}(port:\type{Int}):();
+%   %     \method{Accept}(UID:\type{Int},passphrase:\type{String}):();
+%   %     \method{Disconnect}():();
+%   %   }
+%   % };
+
+%   \node[class] (TCL) [left of=CLT, node distance = 8cm] {
+%     \newclass{Token collection}
+%     {
+%       \attribut{Token}:\type{HashTable}
+%     }{
+%       \method{del}(tok:\type{Token}):();
+%       \method{add}(tok:\type{Token}):();
+%       \method{hash}():()
+%     }
+%   };
+
+%   \node[class] (TOK) [left of=TCL, node distance=5cm] {
+%     \newclass{Token}{
+%       \attribut{DBID}:\type{Int}
+%     }{
+%     }
+%   };
+
+%   \node[class] (POK) [below of=TOK, node distance=2.8cm,xshift=-2.5cm]{
+%     \newclass{Pokemon}
+%     {
+%       \attribut{Name}:\type{String};
+%       ...
+%     }{
+%     }
+%   };
+
+%   \node[class] (POI) [below of=TOK, node distance=2.8cm,xshift=2.5cm]{
+%     \newclass{Point of Interest}
+%     {
+%       \attribut{Name}:\type{String};
+%       ...
+%     }{
+%     }
+%   };
+
+%   \path
+%   (TCP) edge [->,line width=1.5pt] node {} (BUS)
+%   (HTCP) edge [->,line width=1.5pt] node {} (HBUS)
+%   (OBJ) edge [-open diamond, line width=1.5pt] node {} (TCP.north east)
+%   (OBJ) edge [-open diamond, line width=1.5pt] node {} (HTCP.north east)
+%   (SRV) edge [->, line width=1.5pt] node {} (OBJ)
+%   (CLT.north west) edge [->, line width=1.5pt] node {} (OBJ)
+%   (SDB.north west) edge [->, line width=1.5pt] node {} (OBJ)
+%   % (SRV) edge [loosely dashed,->, line width=1.5pt] node {} (SRVI)
+%   % (CLT.north east) edge [loosely dashed,->, line width=1.5pt] node {} (SRVI)
+%   % (SDB) edge [loosely dashed,->, line width=1.5pt] node {} (SRVI)
+%   (TCL) edge [-open diamond, line width=1.5pt] node {} (TOK)
+%   (POK) edge [->,line width=1.5pt] node {} (TOK)
+%   (POI) edge [->,line width=1.5pt] node {} (TOK)
+%   (CLT) edge [-open diamond, line width=1.5pt] node {} (TCL);
+  
+% \end{tikzpicture}

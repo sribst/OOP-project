@@ -1,0 +1,71 @@
+\usetikzlibrary{arrows}
+
+% to set size for itemize in node
+\usepackage{varwidth}
+
+% to reduce left margin of itemize
+\usepackage{enumitem}
+\setlist{leftmargin=0mm}
+
+\tikzset{
+  class/.style={
+    rectangle,
+    rounded corners,
+    draw=black, very thick,
+    minimum height=2em,
+    inner sep=4pt,
+    text centered,
+  },
+}
+
+% use for the 'parser'
+\usepackage{etoolbox}
+
+% second try of foreach loop
+\newcommand\handler[1]{\item[-] #1}
+\DeclareListParser*\forsemicolonlist{;}
+
+% provides \isempty test
+\usepackage{xifthen}
+
+\usepackage{enumitem}
+% \newclass{class name}{attribute <list>}{method <list>}
+% attribute list and method list are list with ',' as separator
+\newcommand{\newclass}[3]{
+  {
+    \begin{tabular}{l}
+     \renewcommand{\arraystretch}{1.5}
+      \large{\textbf{#1}}
+      \ifthenelse{\isempty{#2}}{}{
+      \\
+      \hline
+      \textbf{Attribute}\\
+      {\begin{varwidth}{\linewidth}\begin{itemize}[noitemsep]
+            \forsemicolonlist\handler{#2}
+          \end{itemize}\end{varwidth}}
+      }
+      \ifthenelse{\isempty{#3}}{}{
+      \\
+      \hline
+      \textbf{Method}\\
+      {\begin{varwidth}{\linewidth}\begin{itemize}[noitemsep]
+            \forsemicolonlist\handler{#3}
+          \end{itemize}\end{varwidth}}
+      }
+   \end{tabular}}
+}
+
+\newcommand{\newtable}[2]{
+  {
+    \begin{tabular}{l}
+     \renewcommand{\arraystretch}{1.5}
+      \large{\textbf{#1}}
+      \ifthenelse{\isempty{#2}}{}{
+      \\
+      \hline
+      {\begin{varwidth}{\linewidth}\begin{itemize}[noitemsep]
+            \forsemicolonlist\handler{#2}
+          \end{itemize}\end{varwidth}}
+      }
+   \end{tabular}}
+}
